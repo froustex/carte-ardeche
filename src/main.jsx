@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
 import MapPage from "./pages/MapPage.jsx";
-import stats from "./data/stats.json";
+
 
 const router = createBrowserRouter([
   {
@@ -14,7 +14,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <MapPage />,
-        loader: () => stats,
       },
     ],
   },
