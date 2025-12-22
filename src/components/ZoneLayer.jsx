@@ -59,7 +59,7 @@ export default function ZoneLayer({
               const radius = getRadius(geo.properties.population);
               return (
                 <Marker key={geo.rsmKey} coordinates={[center_lon, center_lat]}>
-                  <circle r={radius} fill="#2563eb" opacity={0.85} />
+                  <circle r={radius} fill="black" opacity={0.85} />
                   <text
                     y={nom_officiel === "Saint-Péray" ? -4 : 10}
                     textAnchor="middle"

@@ -14,29 +14,36 @@ function MapPage() {
     (sum, CP) => sum + getValueByFilter(CP, activeFilter),
     0
   );
-  /*const testZone = Object.values(zones.features);
-  let arr = [];
-  for (const item of testZone) {
-    arr.push(item.properties.zone_nom);
-  }
-  console.log(arr);
 
-  /*const testCom = Object.values(communes.features);
-  let ob = {}
-  let arr = []
-  for (const item of testCom) {
-    if (!item.properties.zone_nom) {
-      ar.push
+  function enrichStatsWithZone(statsByCP, communesgeoJson) {
+    const enriched = {};
+    const cpToZone = {};
+    for (const item of communesgeoJson.features) {
+      const cp = item.properties.code_postal;
+      const zoneNom = item.properties.zone_nom;
+      if (cp && zoneNom) {
+        cpToZone[cp] = zoneNom;
+      }
     }
-  }*/
-  console.log(test.codes_postaux);
+    for (const [cp, data] of Object.entries(statsByCP)) {
+      enriched[cp] = {
+        zone: cpToZone[cp] || null,
+        ...data,
+      };
+    }
+    return enriched;
+  }
+
+  const stats = enrichStatsWithZone(test.codes_postaux, communes);
+
+  console.log(stats);
 
   return (
     <>
       {level === "commune" && (
         <button
           type="button"
-          className="absolute -mt-8 right-50 border-3 rounded-lg border-black p-6 cursor-pointer z-2 hover:bg-[#60A5FA]"
+          className="absolute mt-6 right-50 border rounded-lg border-black p-2 cursor-pointer z-2 hover:bg-[#60A5FA]"
           onClick={() => {
             setLevel("zone");
             setSelectedZone(null);
