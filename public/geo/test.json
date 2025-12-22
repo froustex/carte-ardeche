@@ -1,0 +1,31 @@
+{
+  "codes_postaux": {
+    "07001": {
+      "agents": 6,
+      "employés": 8,
+      "ouvriers": 11
+    },
+    "07002": {
+      "agents": 15,
+      "employés": 8,
+      "ouvriers": 31
+    },
+    "07200": {
+      "agents": 7,
+      "employés": 2,
+      "ouvriers": 1
+    },
+
+    "07210": {
+      "agents": 15,
+      "employés": 4,
+      "ouvriers": 5
+    },
+
+    "07500": {
+      "agents": 9,
+      "employés": 8,
+      "ouvriers": 3
+    }
+  }
+}

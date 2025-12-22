@@ -5,7 +5,6 @@ import "./index.css";
 import App from "./App.jsx";
 import MapPage from "./pages/MapPage.jsx";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -14,6 +13,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <MapPage />,
+        loader: async () => {
+          const [departement, zones, communes] = await Promise.all([
+            fetch("/geo/departement.geojson").then((r) => r.json()),
+            fetch("/geo/zones.geojson").then((r) => r.json()),
+            fetch("/geo/communes.geojson").then((r) => r.json()),
+          ]);
+          return { departement, zones, communes };
+        },
       },
     ],
   },
