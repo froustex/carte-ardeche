@@ -1,5 +1,5 @@
 export function getTotalCP(CP) {
-  return (CP.agents || 0) + (CP.employes || 0) + (CP.ouvriers || 0);
+  return (CP.agents || 0) + (CP.employés || 0) + (CP.ouvriers || 0);
 }
 
 export function getValueByFilter(CP, filter) {

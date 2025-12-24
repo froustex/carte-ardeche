@@ -13,6 +13,10 @@ export default function ArdecheMap({
   setActiveFilter,
   total,
   getValueByFilter,
+  showZones,
+  stats,
+  zonesTotals,
+  onTotalClick,
 }) {
   return (
     <div>
@@ -37,6 +41,10 @@ export default function ArdecheMap({
               setActiveFilter={setActiveFilter}
               total={total}
               getValueByFilter={getValueByFilter}
+              showZones={showZones}
+              onTotalClick={onTotalClick}
+              stats={stats}
+              zonesTotals={zonesTotals}
             />
           )}
 
@@ -49,6 +57,8 @@ export default function ArdecheMap({
               setActiveFilter={setActiveFilter}
               total={total}
               getValueByFilter={getValueByFilter}
+              stats={stats}
+              zonesTotals={zonesTotals}
             />
           )}
         </ComposableMap>

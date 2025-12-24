@@ -1,22 +1,22 @@
 import { useLoaderData } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import ArdecheMap from "../components/ArdecheMap";
 import { getValueByFilter } from "../utils/dataUtils";
-import test from "../../public/geo/test.json";
+import test from "../data/test.json";
 
 function MapPage() {
   const { departement, zones, communes } = useLoaderData();
   const [level, setLevel] = useState("zone");
   const [selectedZone, setSelectedZone] = useState(null);
   const [activeFilter, setActiveFilter] = useState("tous");
+  const [showZones, setShowZones] = useState(false);
 
   const total = Object.values(test.codes_postaux).reduce(
     (sum, CP) => sum + getValueByFilter(CP, activeFilter),
     0
   );
 
-  function enrichStatsWithZone(statsByCP, communesgeoJson) {
-    const enriched = {};
+  function enrichStatsWithZone(stats, communesgeoJson) {
     const cpToZone = {};
     for (const item of communesgeoJson.features) {
       const cp = item.properties.code_postal;
@@ -25,7 +25,8 @@ function MapPage() {
         cpToZone[cp] = zoneNom;
       }
     }
-    for (const [cp, data] of Object.entries(statsByCP)) {
+    const enriched = {};
+    for (const [cp, data] of Object.entries(stats)) {
       enriched[cp] = {
         zone: cpToZone[cp] || null,
         ...data,
@@ -34,9 +35,19 @@ function MapPage() {
     return enriched;
   }
 
-  const stats = enrichStatsWithZone(test.codes_postaux, communes);
+  const stats = useMemo(
+    () => enrichStatsWithZone(test.codes_postaux, communes),
+    []
+  );
 
-  console.log(stats);
+  const zonesTotals = {};
+  Object.values(stats).forEach((cp) => {
+    if (!cp.zone) return;
+    if (!zonesTotals[cp.zone]) {
+      zonesTotals[cp.zone] = 0;
+    }
+    zonesTotals[cp.zone] += getValueByFilter(cp, activeFilter);
+  });
 
   return (
     <>
@@ -81,6 +92,15 @@ function MapPage() {
         >
           OUVRIERS
         </button>
+
+        {showZones && (
+          <button
+            className="border p-2 rounded-lg cursor-pointer hover:bg-[#60A5FA] w-24 justify-self-end"
+            onClick={() => setShowZones(false)}
+          >
+            RETOUR
+          </button>
+        )}
       </div>
       <div>
         <ArdecheMap
@@ -91,9 +111,12 @@ function MapPage() {
           setLevel={setLevel}
           selectedZone={selectedZone}
           setSelectedZone={setSelectedZone}
-          activeFilter={activeFilter}
-          setActiveFilter={setActiveFilter}
           total={total}
+          zonesTotals={zonesTotals}
+          showZones={showZones}
+          stats={stats}
+          onTotalClick={() => setShowZones(true)}
+          activeFilter={activeFilter}
         />
       </div>
     </>

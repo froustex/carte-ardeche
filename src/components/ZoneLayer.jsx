@@ -10,14 +10,22 @@ export default function ZoneLayer({
   setSelectedZone,
   communes,
   total,
+  showZones,
+  onTotalClick,
+  zonesTotals,
 }) {
+  const zonesCenter = {
+    centre: [4.6, 44.84],
+    nord: [4.62, 45.12],
+    sud: [4.3, 44.55],
+  };
+
   return (
     <>
       <Geographies geography={zones}>
         {({ geographies }) =>
           geographies.map((geo) => {
             const zoneNom = geo.properties.zone_nom;
-            const zoneID = geo.properties.zone_id;
 
             return (
               <>
@@ -39,12 +47,32 @@ export default function ZoneLayer({
           })
         }
       </Geographies>
-      <Marker coordinates={[4.5, 44.8]}>
-        <circle r={18} fill="#2563eb" stroke="black" />
-        <text textAnchor="middle" y={5} fill="#ffffff" fontWeight="bold">
-          {total}
-        </text>
-      </Marker>
+      {!showZones && (
+        <Marker
+          coordinates={[4.5, 44.8]}
+          onClick={onTotalClick}
+          className="cursor-pointer"
+        >
+          <circle r={18} fill="#2563eb" stroke="black" />
+
+          <text textAnchor="middle" y={5} fill="#ffffff" fontWeight="bold">
+            {total}
+          </text>
+        </Marker>
+      )}
+      {showZones &&
+        Object.entries(zonesTotals).map(([zone, totalZone]) => {
+          const [lon, lat] = zonesCenter[zone];
+          return (
+            <Marker key={zone} coordinates={[lon, lat]}>
+              <circle r={18} fill="#2563eb" stroke="black" />
+              <text y={7} textAnchor="middle" fill="#ffffff">
+                {totalZone}
+              </text>
+            </Marker>
+          );
+        })}
+
       <Geographies geography={communes}>
         {({ geographies }) =>
           geographies
